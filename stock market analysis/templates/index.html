@@ -1,0 +1,197 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Trading Analysis</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        .input-section {
+            text-align: center;
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        input[type="text"], select {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 200px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .results-section {
+            margin-top: 30px;
+        }
+
+        .result-card {
+            background-color: #f8f9fa;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #007bff;
+        }
+
+        .result-card h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+
+        .loading {
+            text-align: center;
+            display: none;
+        }
+
+        .loading::after {
+            content: "...";
+            animation: dots 1s steps(5, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: "."; }
+            40% { content: ".."; }
+            60%, 100% { content: "..."; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AI Trading Analysis</h1>
+        
+        <div class="input-section">
+            <input type="text" id="symbolInput" placeholder="Enter stock symbol">
+            <select id="modelSelect">
+                <option value="claude-3-opus">Claude 3 Opus</option>
+                <option value="claude-3-sonnet">Claude 3 Sonnet</option>
+                <option value="claude-2">Claude 2</option>
+                <option value="gpt-4">GPT-4</option>
+                <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                <option value="gemini-pro">Gemini Pro</option>
+                <option value="mixtral">Mixtral 8x7B</option>
+            </select>
+            <button onclick="analyzeStock()" id="analyzeButton">Analyze</button>
+        </div>
+
+        <div id="loading" class="loading">
+            Analyzing stock data
+        </div>
+
+        <div class="results-section">
+            <div class="result-card">
+                <h3>Market Analysis</h3>
+                <div id="marketAnalysis"></div>
+            </div>
+
+            <div class="result-card">
+                <h3>Trading Strategy</h3>
+                <div id="tradingStrategy"></div>
+            </div>
+
+            <div class="result-card">
+                <h3>Execution Plan</h3>
+                <div id="executionPlan"></div>
+            </div>
+
+            <div class="result-card">
+                <h3>Risk Assessment</h3>
+                <div id="riskAssessment"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function analyzeStock() {
+            const symbol = document.getElementById('symbolInput').value;
+            const model = document.getElementById('modelSelect').value;
+            const button = document.getElementById('analyzeButton');
+            
+            if (!symbol) {
+                alert('Please enter a stock symbol');
+                return;
+            }
+
+            // Disable button and show loading
+            button.disabled = true;
+            document.getElementById('loading').style.display = 'block';
+            
+            // Clear previous results
+            document.getElementById('marketAnalysis').textContent = '';
+            document.getElementById('tradingStrategy').textContent = '';
+            document.getElementById('executionPlan').textContent = '';
+            document.getElementById('riskAssessment').textContent = '';
+
+            fetch('/analyze', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    symbol: symbol,
+                    model: model
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+                    document.getElementById('marketAnalysis').textContent = data.market_analysis;
+                    document.getElementById('tradingStrategy').textContent = data.trading_strategy;
+                    document.getElementById('executionPlan').textContent = data.execution_plan;
+                    document.getElementById('riskAssessment').textContent = data.risk_assessment;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while analyzing the stock: ' + error.message);
+                })
+                .finally(() => {
+                    button.disabled = false;
+                    document.getElementById('loading').style.display = 'none';
+                });
+        }
+    </script>
+</body>
+</html>
