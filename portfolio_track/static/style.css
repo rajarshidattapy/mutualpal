@@ -1,0 +1,530 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f5f7fa;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+/* Topbar */
+.topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    z-index: 1000;
+}
+
+.brand {
+    font-size: 20px;
+    font-weight: 700;
+    color: #007BFF;
+}
+
+.top-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.google-btn {
+    background: white;
+    color: #333;
+    border: 1px solid #ccc;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.google-btn:hover {
+    background: #f8f9fa;
+    border-color: #007BFF;
+}
+
+.user-display {
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+    padding: 6px 12px;
+    background: #f0f4ff;
+    border-radius: 6px;
+}
+
+/* Tabs */
+.tabs {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    background: white;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    padding: 0 30px;
+    z-index: 999;
+}
+
+.tab {
+    background: transparent;
+    border: none;
+    padding: 15px 20px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    color: #666;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s;
+}
+
+.tab:hover {
+    color: #007BFF;
+}
+
+.tab.active {
+    color: #007BFF;
+    border-bottom-color: #007BFF;
+}
+
+/* Fullscreen layout for landing page */
+.fullscreen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.center-panel {
+    max-width: 600px;
+    width: 100%;
+    background: white;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+/* Container for result page (with tabs) */
+.fullscreen-content {
+    margin-top: 120px;
+    padding: 30px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.container {
+    background: white;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+h1, h2 {
+    color: #333;
+}
+
+h1 {
+    font-size: 28px;
+    margin-top: 0;
+}
+
+h2 {
+    font-size: 22px;
+    margin-top: 30px;
+}
+
+p {
+    color: #555;
+    line-height: 1.6;
+}
+
+input[type="file"] {
+    margin: 20px 0;
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    width: 100%;
+}
+
+button[type="submit"] {
+    background: #007BFF;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+button[type="submit"]:hover {
+    background: #0056b3;
+}
+
+.loader {
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #007BFF;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin: 20px auto;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.tab-content {
+    padding: 20px 0;
+}
+
+.chart-container {
+    margin: 30px auto;
+    max-width: 500px;
+}
+
+.chart-row {
+    margin: 20px 0 30px 0;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.advice-box {
+    text-align: left;
+    background: #f0f4ff;
+    border-radius: 12px;
+    padding: 25px;
+    margin-top: 20px;
+    color: #333;
+    line-height: 1.7;
+}
+
+.advice-box p {
+    margin: 0;
+}
+
+/* Enhanced Gemini Advice Display */
+.gemini-advice {
+    background: linear-gradient(135deg, #f0f4ff 0%, #e8f0fe 100%);
+    border-left: 4px solid #007BFF;
+    font-size: 15px;
+    white-space: pre-wrap;
+}
+
+.gemini-advice strong {
+    color: #007BFF;
+    font-weight: 600;
+}
+
+.gemini-advice ul, .gemini-advice ol {
+    margin: 15px 0;
+    padding-left: 25px;
+}
+
+.gemini-advice li {
+    margin-bottom: 10px;
+}
+
+/* Goal-Based Saving Plan Display */
+.goal-plan-box {
+    background: white;
+    border: 2px solid #28a745;
+    border-radius: 12px;
+    padding: 25px;
+    margin-top: 15px;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.1);
+}
+
+.goal-plan-box {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #333;
+    white-space: pre-wrap;
+}
+
+.goal-plan-box strong {
+    color: #28a745;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.goal-plan-box ol {
+    counter-reset: item;
+    list-style-type: none;
+    padding-left: 0;
+    margin: 20px 0;
+}
+
+.goal-plan-box ol li {
+    counter-increment: item;
+    margin-bottom: 20px;
+    padding-left: 40px;
+    position: relative;
+}
+
+.goal-plan-box ol li:before {
+    content: counter(item);
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: #28a745;
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.goal-plan-box ul {
+    margin: 10px 0;
+    padding-left: 25px;
+}
+
+.goal-plan-box li {
+    margin-bottom: 8px;
+}
+
+.goal-plan-box h1, .goal-plan-box h2, .goal-plan-box h3 {
+    color: #28a745;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.goal-plan-box p {
+    margin-bottom: 12px;
+}
+
+.back-btn {
+    display: inline-block;
+    margin-top: 30px;
+    text-decoration: none;
+    background: #333;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.back-btn:hover {
+    background: #555;
+}
+
+/* Monthly Data Tables */
+.monthly-container {
+    margin-top: 20px;
+}
+
+.month-section {
+    margin-bottom: 40px;
+}
+
+.month-section h2 {
+    color: #007BFF;
+    border-bottom: 2px solid #007BFF;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.data-table thead {
+    background: #007BFF;
+    color: white;
+}
+
+.data-table th {
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+}
+
+.data-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.data-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.category-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    background: #f0f4ff;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #007BFF;
+}
+
+/* Chatbot Section */
+.chatbot-section {
+    margin-bottom: 40px;
+}
+
+.insights-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.insight-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 12px;
+    font-size: 15px;
+    line-height: 1.5;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.chat-container {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.chat-messages {
+    height: 400px;
+    overflow-y: auto;
+    padding: 20px;
+    background: #fafafa;
+}
+
+.user-message, .bot-message {
+    padding: 12px 16px;
+    border-radius: 18px;
+    margin-bottom: 12px;
+    max-width: 75%;
+    line-height: 1.5;
+    word-wrap: break-word;
+}
+
+.user-message {
+    background: #007BFF;
+    color: white;
+    margin-left: auto;
+    text-align: right;
+    float: right;
+    clear: both;
+}
+
+.bot-message {
+    background: white;
+    color: #333;
+    border: 1px solid #e0e0e0;
+    float: left;
+    clear: both;
+}
+
+.bot-message.error {
+    background: #fee;
+    border-color: #fcc;
+    color: #c33;
+}
+
+.chat-messages::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.chat-input-container {
+    display: flex;
+    border-top: 1px solid #e0e0e0;
+    background: white;
+}
+
+.chat-input {
+    flex: 1;
+    padding: 15px;
+    border: none;
+    font-size: 15px;
+    outline: none;
+}
+
+.chat-send-btn {
+    background: #007BFF;
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.chat-send-btn:hover {
+    background: #0056b3;
+}
+
+/* PDF Download Button */
+.pdf-download-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #28a745;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    box-shadow: 0 4px 20px rgba(40, 167, 69, 0.4);
+    transition: all 0.3s;
+    z-index: 1000;
+}
+
+.pdf-download-btn:hover {
+    background: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(40, 167, 69, 0.5);
+}
+
+/* Responsive tweaks */
+@media (max-width: 800px) {
+    .topbar { padding: 0 15px; }
+    .tabs { padding: 0 15px; }
+    .brand { font-size: 16px; }
+    .fullscreen-content { margin-top: 100px; padding: 15px; }
+    .container { padding: 20px; }
+    .center-panel { padding: 25px; }
+    canvas { width: 100% !important; height: auto !important; }
+    .data-table { font-size: 13px; }
+    .data-table th, .data-table td { padding: 8px; }
+    .user-message, .bot-message { max-width: 90%; }
+    .pdf-download-btn { bottom: 15px; right: 15px; padding: 10px 16px; font-size: 14px; }
+}
+
+

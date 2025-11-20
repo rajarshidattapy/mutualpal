@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Personal Financial Advisor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <header class="topbar">
+        <div class="brand">💼 Personal Financial Advisor</div>
+        <div class="top-actions">
+            <button id="fakeGoogleLogin" class="google-btn">Sign in with Google</button>
+            <span id="userDisplay" class="user-display" style="display:none;"></span>
+        </div>
+    </header>
+
+    <nav class="tabs">
+        <button id="analysisTabBtn" class="tab active">📊 Analysis</button>
+        <button id="monthlyTabBtn" class="tab">📅 Monthly Data</button>
+        <button id="chatbotTabBtn" class="tab">💬 AI Chatbot</button>
+        <button id="geminiTabBtn" class="tab">💡 Gemini Analysis</button>
+    </nav>
+
+    <div class="container fullscreen-content">
+        <!-- Analysis Tab -->
+        <section id="analysisTab" class="tab-content">
+            <h1>📊 Your Spending Analysis</h1>
+
+            <div class="chart-container">
+                <h2>🧾 Spending by Category</h2>
+                <canvas id="spendingChart" width="400" height="400"></canvas>
+            </div>
+
+            <div class="chart-row">
+                <h2>📈 Spending Over Time</h2>
+                <canvas id="timeChart" width="800" height="300"></canvas>
+            </div>
+
+            <div class="chart-row">
+                <h2>📅 Category Trends by Date</h2>
+                <canvas id="categoryChart" width="800" height="300"></canvas>
+            </div>
+
+            <a href="/" class="back-btn">← Upload Another File</a>
+        </section>
+
+        <!-- Gemini AI Tab -->
+        <section id="geminiTab" class="tab-content" style="display:none;">
+            <h1>💡 Gemini's Financial Advice</h1>
+            <div class="advice-box gemini-advice">
+                {{ advice|safe }}
+            </div>
+            <a href="/" class="back-btn">← Upload Another File</a>
+        </section>
+
+        <!-- Monthly Data Tab -->
+        <section id="monthlyTab" class="tab-content" style="display:none;">
+            <h1>📅 Monthly Transaction Data</h1>
+            <div class="monthly-container">
+                {% if monthly_data %}
+                    {% for month, transactions in monthly_data.items() %}
+                    <div class="month-section">
+                        <h2>{{ month }}</h2>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>Category</th>
+                                    <th>Amount (₹)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for txn in transactions %}
+                                <tr>
+                                    <td>{{ txn.Date_str }}</td>
+                                    <td>{{ txn.Description }}</td>
+                                    <td><span class="category-badge">{{ txn.Category }}</span></td>
+                                    <td>₹{{ "%.2f"|format(txn.Debit) }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No monthly data available.</p>
+                {% endif %}
+            </div>
+            <a href="/" class="back-btn">← Upload Another File</a>
+        </section>
+
+        <!-- AI Chatbot Tab -->
+        <section id="chatbotTab" class="tab-content" style="display:none;">
+            <h1>💬 Ask My Finances</h1>
+            
+            <!-- Goal-based Savings -->
+            <div class="chatbot-section">
+                <h2>🎯 Goal-Based Saving Plan</h2>
+                <div class="goal-plan-box">
+                    {{ goal_plan|safe }}
+                </div>
+            </div>
+
+            <!-- Micro-insights -->
+            <div class="chatbot-section">
+                <h2>💡 Smart Insights</h2>
+                <div class="insights-list">
+                    {% if micro_insights %}
+                        {% for insight in micro_insights %}
+                        <div class="insight-card">{{ insight }}</div>
+                        {% endfor %}
+                    {% else %}
+                        <p>No specific insights available.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Chat Interface -->
+            <div class="chatbot-section">
+                <h2>💬 Chat with Your Data</h2>
+                <div class="chat-container">
+                    <div id="chatMessages" class="chat-messages">
+                        <div class="bot-message">👋 Hi! Ask me about your spending. Try: "How much did I spend on food?" or "What's my biggest expense?"</div>
+                    </div>
+                    <div class="chat-input-container">
+                        <input type="text" id="chatInput" class="chat-input" placeholder="Ask about your finances...">
+                        <button id="chatSend" class="chat-send-btn">Send</button>
+                    </div>
+                </div>
+            </div>
+
+            <a href="/" class="back-btn">← Upload Another File</a>
+        </section>
+
+        <!-- PDF Download Button (floating) -->
+        <a href="/download-pdf" class="pdf-download-btn" title="Download PDF Report">
+            📥 Download Report
+        </a>
+    </div>
+
+    <!-- External JS -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+    <!-- Inline Chart Rendering -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Restore fake login state
+            const user = localStorage.getItem('pfa_user');
+            if (user) {
+                const disp = document.getElementById('userDisplay');
+                const btn = document.getElementById('fakeGoogleLogin');
+                if (disp) { disp.textContent = user; disp.style.display = 'inline-block'; }
+                if (btn) btn.textContent = 'Sign out';
+            }
+
+            // Render charts safely
+            try {
+                const summary = {{ summary|tojson }};
+                const dates = {{ dates|tojson }};
+                const totals = {{ totals|tojson }};
+                const category_series = {{ category_series|tojson }};
+
+                if (summary && Object.keys(summary).length) renderSpendingChart(summary);
+                if (dates && totals && dates.length) renderTimeSeries(dates, totals);
+                if (dates && category_series && dates.length) renderCategorySeries(dates, category_series);
+            } catch (e) {
+                console.warn('Chart rendering skipped or failed:', e);
+            }
+        });
+    </script>
+</body>
+</html>

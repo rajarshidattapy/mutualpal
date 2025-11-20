@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Financial Advisor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="topbar">
+        <div class="brand">Personal Financial Advisor</div>
+        <div class="top-actions">
+            <button id="fakeGoogleLogin" class="google-btn">Sign in with Google</button>
+            <span id="userDisplay" class="user-display" style="display:none;"></span>
+        </div>
+    </header>
+
+    <main class="fullscreen">
+        <div class="center-panel">
+            <h1>💰 Personal Financial Advisor</h1>
+            <p>Upload your bank statement (CSV) and get smart insights powered by Gemini AI.</p>
+
+            <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+                <input type="file" name="file" id="fileInput" accept=".csv" required>
+                <button type="submit">Analyze My Spending</button>
+            </form>
+
+            <div id="loading" style="display:none;">
+                <div class="loader"></div>
+                <p>Analyzing your data... please wait.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Inline loading handler -->
+    <script>
+        const form = document.getElementById('uploadForm');
+        const loading = document.getElementById('loading');
+
+        form.addEventListener('submit', () => {
+            loading.style.display = 'block';
+        });
+    </script>
+
+    <!-- External JS file (after inline script) -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
